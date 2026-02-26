@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Colorful Age Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff6ec4, #7873f5, #42e695);
+            background-size: 300% 300%;
+            animation: gradientMove 8s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            width: 380px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 20px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #a18cd1, #fbc2eb);
+        }
+
+        #result {
+            margin-top: 25px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .error {
+            color: #ffdddd;
+            font-weight: bold;
+        }
+
+        small {
+            display: block;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>🌟 Age Calculator</h2>
+        <input type="date" id="dob" max="">
+        <button id="calcBtn">Calculate Age</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        const today = new Date();
+        document.getElementById("dob").max = today.toISOString().split("T")[0];
+
+        document.getElementById("calcBtn").addEventListener("click", calculateAge);
+
+        function calculateAge() {
+            const dobInput = document.getElementById("dob").value;
+            const result = document.getElementById("result");
+
+            if (!dobInput) {
+                result.innerHTML = "⚠ Please select your date of birth.";
+                result.classList.add("error");
+                return;
+            }
+
+            const dob = new Date(dobInput);
+            const now = new Date();
+
+            let years = now.getFullYear() - dob.getFullYear();
+            let months = now.getMonth() - dob.getMonth();
+            let days = now.getDate() - dob.getDate();
+
+            if (days < 0) {
+                months--;
+                const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            const totalDays = Math.floor((now - dob) / (1000 * 60 * 60 * 24));
+
+            result.classList.remove("error");
+            result.innerHTML = `
+                🎉 You are <strong>${years}</strong> years, 
+                <strong>${months}</strong> months, 
+                and <strong>${days}</strong> days old.
+                <small>✨ Total Days Lived: ${totalDays}</small>
+            `;
+        }
+    </script>
+
+</body>
+</html>
